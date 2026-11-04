@@ -97,15 +97,42 @@ void Game::NewPlayer()
 
 void Game::NewEnemy()
 {
+	int i = rand() % 9;
 	srand(static_cast<unsigned int>(time(0)));
-	std::string name = "arkilyan M";
-	int level = (rand() % 10);
-	int hp = (rand() % 2);
-	int xp = (rand() % 5);
-	int damage = (rand() % 6);
-	int defence = (rand() % 20);
-	enemy = new Enemy(name, level, hp, damage, defence, xp);
-	enemy->PrintEnemyStats();
+
+	if (i >= 7)
+	{
+		std::string name = "arkilyan M";
+		int level = (rand() % 10);
+		int hp = (rand() % 2);
+		int xp = (rand() % 5);
+		int damage = (rand() % 6);
+		int defence = (rand() % 20);
+		enemy = new Enemy(name, level, hp, damage, defence, xp);
+		enemy->PrintEnemyStats();
+	}
+	else if (i >= 4)
+	{
+		std::string name = "Zenomorf";
+		int level = (rand() % 10);
+		int hp = (rand() % 2);
+		int xp = (rand() % 5);
+		int damage = (rand() % 6);
+		int defence = (rand() % 20);
+		enemy = new Enemy(name, level, hp, damage, defence, xp);
+		enemy->PrintEnemyStats();
+	}
+	if (i >= 1)
+	{
+		std::string name = "RALPH, the dog eater";
+		int level = (rand() % 10);
+		int hp = (rand() % 2);
+		int xp = (rand() % 5);
+		int damage = (rand() % 6);
+		int defence = (rand() % 20);
+		enemy = new Enemy(name, level, hp, damage, defence, xp);
+		enemy->PrintEnemyStats();
+	}
 
 
 }
