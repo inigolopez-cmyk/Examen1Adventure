@@ -21,6 +21,7 @@ public:
 	virtual ~Game();
 	void InitGame();
 	void MainMenu();
+	void GameOver();
 
 	void Travel();
 

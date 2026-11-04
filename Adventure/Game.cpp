@@ -63,6 +63,54 @@ void Game::MainMenu()
 	}
 }
 
+void Game::GameOver()
+{
+	while (!player.IsAlive() && this->playing)
+	{
+		std::system("cls");
+
+		int choice = 0;
+
+		std::cout << "-----GAME OVER-----" << std::endl;
+		std::cout << "Choose your action" << std::endl;
+		std::cout << "0: Quit Game" << std::endl;
+		std::cout << "1: Restart from the beginning" << std::endl;
+		std::cout << "2: Restart from last save file" << std::endl;
+
+		std::cin >> choice;
+
+		if (std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
+			choice = -1;
+		}
+
+		switch (choice)
+		{
+		case 0:
+			std::system("cls");
+			this->playing = false;
+			break;
+		case 1:
+			std::system("cls");
+			NewPlayer();
+			break;
+		case 2:
+			std::system("cls");
+			LoadPlayer();
+			break;
+		default:
+			std::cout << "Invalid Option" << std::endl;
+			break;
+		}
+	}
+
+
+
+	}
+}
+
 void Game::Travel()
 {
 	this->ev.GenerateEvent(player);
