@@ -105,15 +105,16 @@ void Game::GameOver()
 			break;
 		}
 	}
-
-
-
-	}
 }
 
 void Game::Travel()
 {
 	this->ev.GenerateEvent(player);
+
+	if (this->ev.GetPuzzleCompleted())
+	{
+		std::cout << "You solved the puzzle. You win!" << std::endl;
+	}
 }
 
 void Game::SavePlayer()
@@ -145,9 +146,8 @@ void Game::NewPlayer()
 
 void Game::NewEnemy()
 {
-	int i = rand() % 9;
 	srand(static_cast<unsigned int>(time(0)));
-
+	int i = rand() % 9;
 	if (i >= 7)
 	{
 		std::string name = "arkilyan M";

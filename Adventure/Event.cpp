@@ -2,6 +2,7 @@
 
 Event::Event()
 {
+	this->puzzleCompleted = false;
 }
 
 Event::~Event()
@@ -21,6 +22,7 @@ void Event::GenerateEvent(Player& p)
 
 	case 5:
 		std::cout << "Puzzle Encounter" << std::endl;
+		PuzzleEncounter(p);
 		break;
 
 	default:
@@ -127,6 +129,7 @@ void Event::EnemyEncounter(Player& p)
 				std::cout << "Exp: " << baseEnemy->GetExp() << std::endl;
 				p.AddExp(baseEnemy->GetExp());
 			}
+			
 
 			else
 			{
@@ -170,4 +173,111 @@ void Event::EnemyEncounter(Player& p)
 
 void Event::PuzzleEncounter(Player& p)
 {
+	this->puzzleCompleted = false;
+
+	std::system("cls");
+	int choice = 0;
+	bool playerDefeated = false;
+	bool puzzleSolved = false;
+	bool skipPuzzle = false;
+	int reward = rand() % 21 + 10;
+	char lettertoGuess;
+
+
+	std::vector <std::string> words;
+	words.push_back("GUN");
+	words.push_back("ALIEN");
+	words.push_back("SPACESHIP");
+	words.push_back("STAR");
+	words.push_back("GALAXY");
+
+	srand(static_cast<unsigned int>(time(0)));
+	const std::string theWord = words[rand() % words.size()];
+
+	std::string wordToGuess(theWord.size(), '_');
+	std::string used = "";
+
+	std::cout << "-----New Puzzle Encounter-----" << std::endl;
+
+
+	while (wordToGuess != theWord && !playerDefeated && !puzzleSolved && !skipPuzzle)
+	{
+		std::cout << "Word: " << wordToGuess << std::endl;
+		std::cout << "HP: " << p.GetHP() << std::endl;
+
+		std::cout << "Choose your action" << std::endl;
+		std::cout << "0: Skip Puzzle" << std::endl;
+		std::cout << "1: Guess a letter" << std::endl;
+		std::cout << "2: Player Sheet" << std::endl;
+
+		std::cout << "\nLetters used: " << used << std::endl;
+
+		std::cin >> choice;
+		if (std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
+			choice = -1;
+		}
+
+		switch (choice)
+		{
+		case 0:
+			std::cout << "You walk away from the puzzle." << std::endl;
+			skipPuzzle = true;
+			break;
+		case 1:
+			std::cout << "Enter a letter: " << std::endl;
+			std::cin >> lettertoGuess;
+			lettertoGuess = std::toupper(lettertoGuess);
+			if (used.find(lettertoGuess) != std::string::npos || wordToGuess.find(lettertoGuess) != std::string::npos)
+			{
+				std::cout << "You already used that letter" << std::endl;
+			}
+			else if (theWord.find(lettertoGuess) != std::string::npos)
+			{
+				for (int i = 0; i < theWord.size(); i++)
+				{
+					if (theWord[i] == lettertoGuess)
+					{
+						wordToGuess[i] = lettertoGuess;
+					}
+				}
+
+				std::cout << wordToGuess << "\n";
+			}
+			else
+			{
+				used += lettertoGuess;
+				std::cout << "Wrong letter! You take 1 damage!" << std::endl;
+				p.TakeDamage(1);
+			}
+			break;
+		case 2:
+			p.PrintPlayerStats();
+			break;
+		default:
+			std::cout << "Invalid option" << std::endl;
+			break;
+		}
+
+		if (wordToGuess == theWord)
+		{
+			puzzleSolved = true;
+
+		}
+		else if (!p.IsAlive())
+		{
+			std::cout << "YOU FAILED, NOW YOU ARE DEAD" << std::endl;
+			playerDefeated = true;
+		}
+	}
+
+	if (puzzleSolved)
+	{
+		std::cout << "You guessed the word! It was " << theWord << std::endl;
+		std::cout << "EXP Gained: " << reward << std::endl;
+		p.AddExp(reward);
+		this->puzzleCompleted = true;
+	}
 }
