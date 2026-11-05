@@ -84,6 +84,7 @@ void Game::MainMenu()
 
 void Game::GameOver()
 {
+	//El while hace que no se deba de poner la funcion después de que muera el player. Con que !IsAlive, para el programa
 	while (!player.IsAlive() && this->playing)
 	{
 		std::system("cls");
@@ -98,6 +99,7 @@ void Game::GameOver()
 
 		std::cin >> choice;
 
+		//Esto se añade siempre para que al poner otro tipo de respuestas que no sean int, no se muera el programa
 		if (std::cin.fail())
 		{
 			std::cin.clear();
@@ -167,6 +169,8 @@ void Game::NewPlayer()
 
 void Game::NewEnemy()
 {
+	//Se cambió la sintaxis para que sea más cómodo de ver la creación de enemigos
+
 	if (enemy != nullptr)
 	{
 		delete enemy;
@@ -261,6 +265,7 @@ void Game::SkillUp()
 
 void Game::CheatCode()
 {
+	//Para el dev
 	int cheatEXP = 10000;
 	int cheatHP = 900;
 
