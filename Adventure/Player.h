@@ -23,6 +23,7 @@ public:
 	void PrintPlayerStats();
 	void LevelUp();
 	void AddStats(int stat, int value);
+	void AddHealth(int value);
 	void UpdateValues();
 	void LoadStats(const std::string& filename);
 	std::string SaveStats();

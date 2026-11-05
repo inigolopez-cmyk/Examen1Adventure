@@ -10,7 +10,7 @@
 class Event
 {
 private:
-	int numOfEvents;
+	//int numOfEvents;
 	Enemy* baseEnemy;
 	bool puzzleCompleted = false;
 

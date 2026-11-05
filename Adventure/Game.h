@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 #include "Character.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -32,6 +33,8 @@ public:
 	void PrintPlayerStats();
 	void LevelUp();
 	void SkillUp();
+
+	void CheatCode();
 
 	bool GetPlaying();
 };

@@ -8,7 +8,9 @@ Player::Player() :Character()
 	this->dexterity = 5;
 	this->intelligence = 5;
 	this->luck = 5;
+
 	this->MaxXP = 1;
+	this->skillPoints = 0;
 }
 
 Player::~Player()
@@ -92,12 +94,18 @@ void Player::AddStats(int stat, int value)
 	}
 }
 
+void Player::AddHealth(int value)
+{
+	int newHP = GetHP() + value;
+	SetHP(newHP);
+}
+
 void Player::UpdateValues()
 {
-	SetHP((this->intelligence * 2) / (this->dexterity - 3));
+	SetHP((this->intelligence * 4) * (this->dexterity - 3));
 	SetDamageMin(this->strength - 2);
 	SetDamageMax(this->strength * 2);
-	SetDefence((this->agility * 2) / (this->luck - 3));
+	SetDefence((this->agility * 2) + (this->luck - 3));
 }
 
 void Player::LoadStats(const std::string& filename)
@@ -120,8 +128,8 @@ void Player::LoadStats(const std::string& filename)
 	inFile 
 		>> name 
 		>> l 
-		>> hp 
 		>> xp 
+		>> hp 
 		>> dmin 
 		>> dmax 
 		>> d 

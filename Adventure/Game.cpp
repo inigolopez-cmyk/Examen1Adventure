@@ -2,7 +2,9 @@
 
 Game::Game()
 {
+	this->choice = 0;
 	this->playing = true;
+	this->enemy = nullptr;
 }
 
 Game::~Game()
@@ -26,10 +28,18 @@ void Game::MainMenu()
 	std::cout << " 5: Skill Up" << std::endl;
 	std::cout << " 6: Save Player" << std::endl;
 	std::cout << " 7: Load Player" << std::endl;
+	std::cout << " 8: Code" << std::endl;
 
 
 	std::cout << " Enter Choice" << std::endl;
 	std::cin >> choice;
+
+	if (std::cin.fail())
+	{
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+		choice = -1;
+	}
 
 	switch (choice)
 	{
@@ -43,19 +53,28 @@ void Game::MainMenu()
 		NewEnemy();
 		break;
 	case 3:
+		std::system("cls");
 		Travel();
 		break;
 	case 4:
+		std::system("cls");
 		LevelUp();
 		break;
-	case 5:
+	case 5:		
+		std::system("cls");
 		SkillUp();
 		break;
 	case 6:
+		std::system("cls");
 		SavePlayer();
 		break;
 	case 7:
+		std::system("cls");
 		LoadPlayer();
+		break;
+	case 8:
+		std::system("cls");
+		CheatCode();
 		break;
 	default:
 		std::cout << "Invalid Option" << std::endl;
@@ -111,6 +130,8 @@ void Game::Travel()
 {
 	this->ev.GenerateEvent(player);
 
+	GameOver();
+
 	if (this->ev.GetPuzzleCompleted())
 	{
 		std::cout << "You solved the puzzle. You win!" << std::endl;
@@ -146,42 +167,23 @@ void Game::NewPlayer()
 
 void Game::NewEnemy()
 {
-	srand(static_cast<unsigned int>(time(0)));
-	int i = rand() % 9;
-	if (i >= 7)
+	if (enemy != nullptr)
 	{
-		std::string name = "arkilyan M";
-		int level = (rand() % 10);
-		int hp = (rand() % 2);
-		int xp = (rand() % 5);
-		int damage = (rand() % 6);
-		int defence = (rand() % 20);
-		enemy = new Enemy(name, level, hp, damage, defence, xp);
-		enemy->PrintEnemyStats();
-	}
-	else if (i >= 4)
-	{
-		std::string name = "Zenomorf";
-		int level = (rand() % 10);
-		int hp = (rand() % 2);
-		int xp = (rand() % 5);
-		int damage = (rand() % 6);
-		int defence = (rand() % 20);
-		enemy = new Enemy(name, level, hp, damage, defence, xp);
-		enemy->PrintEnemyStats();
-	}
-	if (i >= 1)
-	{
-		std::string name = "RALPH, the dog eater";
-		int level = (rand() % 10);
-		int hp = (rand() % 2);
-		int xp = (rand() % 5);
-		int damage = (rand() % 6);
-		int defence = (rand() % 20);
-		enemy = new Enemy(name, level, hp, damage, defence, xp);
-		enemy->PrintEnemyStats();
+		delete enemy;
+		enemy = nullptr;
 	}
 
+	int level = player.GetLevel();
+	int i = rand() % 3;
+
+	if (i == 0)
+		enemy = new Enemy("Arkylian M", level, 10 + level * 4, 3 + level, level / 2, level * 6);
+	else if (i == 1)
+		enemy = new Enemy("Zenomorf", level, 8 + level * 3, 6 + level, 0, level * 6);
+	else
+		enemy = new Enemy("RALPH, the dog eater", level, 12 + level * 5, 2 + level, level / 2, level * 6);
+
+	enemy->PrintEnemyStats();
 
 }
 
@@ -198,25 +200,101 @@ bool Game::GetPlaying()
 
 void Game::LevelUp()
 {
+	int levelBefore = player.GetLevel();
+
 	player.LevelUp();
+
+	if (player.GetLevel() > levelBefore)
+	{
+		std::cout << "Level UP! Now level " << player.GetLevel() << std::endl;
+	}
+	else
+	{
+		std::cout << "Not enough EXP" << std::endl;
+	}
 }
 
 void Game::SkillUp()
 {
+	if (player.GetSkillPoints() <= 0)
+	{
+		std::cout << "Not enough Skill points" << std::endl;
+		return;
+	}
+
 	while (player.GetSkillPoints() > 0)
 	{
 		std::cout << "You have " << player.GetSkillPoints() << " Skill points to use" << std::endl;
 		std::cout << "--------Stats--------" << std::endl;
+		std::cout << "0: Done (keep the remaining points)" << std::endl;
 		std::cout << "1: Strength" << std::endl;
 		std::cout << "2: Agility" << std::endl;
 		std::cout << "3: Dexterity" << std::endl;
 		std::cout << "4: Intelligence" << std::endl;
 		std::cout << "5: Luck" << std::endl;
+
 		std::cin >> choice;
+		if (std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
+			choice = -1;
+		}
+
+		if (choice == 0)
+		{
+			std::cout << "You saved " << player.GetSkillPoints() << " Skill points for later" << std::endl;
+			return;
+		}
+
+		int pointsBefore = player.GetSkillPoints();
 		player.AddStats(choice, 1);
+
+		if (player.GetSkillPoints() < pointsBefore)
+		{
+			std::cout << "Stat increased!" << std::endl;
+		}
 	}
-	if(player.GetSkillPoints() <= 0)
+
+	std::cout << "You used all your Skill points" << std::endl;
+}
+
+void Game::CheatCode()
+{
+	int cheatEXP = 10000;
+	int cheatHP = 900;
+
+	int healthGained = 20;
+
+	std::string code = "";
+	std::string heal = "";
+
+	std::cout << "Enter code: " << std::endl;
+
+	std::cin >> code;
+	if (std::cin.fail())
 	{
-		std::cout << "Not enough Skill points" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+		code = "XD";
+	}
+
+	if (code == "CC")
+	{
+		player.AddExp(cheatEXP);
+		player.AddHealth(cheatHP);
+		std::cout << "Well cheated :). You gained: " << cheatEXP << " EXP" << std::endl;
+		std::cout << "Well cheated :). You gained: " << cheatHP << " HP" << std::endl;
+
+	}
+	else if (heal == "heal")
+	{
+		player.AddHealth(healthGained);
+		std::cout << "Well done :). You healed: " << healthGained << " HP" << std::endl;
+
+	}
+	else
+	{
+		std::cout << "Wrong code, try tiping: CC" << std::endl;
 	}
 }

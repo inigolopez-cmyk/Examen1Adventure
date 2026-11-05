@@ -3,6 +3,7 @@
 Event::Event()
 {
 	this->puzzleCompleted = false;
+	baseEnemy = nullptr;
 }
 
 Event::~Event()
@@ -11,7 +12,6 @@ Event::~Event()
 
 void Event::GenerateEvent(Player& p)
 {
-	srand(static_cast<unsigned int>(time(0)));
 	int i = rand() % 10;
 
 	switch (i)
@@ -21,6 +21,10 @@ void Event::GenerateEvent(Player& p)
 		break;
 
 	case 5:
+		std::cout << "Puzzle Encounter" << std::endl;
+		PuzzleEncounter(p);
+		break;
+	case 4:
 		std::cout << "Puzzle Encounter" << std::endl;
 		PuzzleEncounter(p);
 		break;
@@ -51,14 +55,16 @@ void Event::EnemyEncounter(Player& p)
 		playerTurn = false;
 	}
 	std::cout << "-----New Enemy Encounter-----" << std::endl;
-
 	int level = p.GetLevel();
-	int hp = p.GetLevel() * 10;
-	int damage = rand() % p.GetDamageMin() + 1;
-	int defence = rand() % p.GetLevel();
-	int exp = hp;
+	int i = rand() % 3 + 1;
 
-	baseEnemy = new Enemy("", level, hp, damage, defence, exp);
+	if (i == 1)
+		baseEnemy = new Enemy("Arkylian M", level, 10 + level * 4, 3 + level, level / 2, level * 6);
+	else if (i == 2)
+		baseEnemy = new Enemy("Zenomorf", level, 8 + level * 3, 6 + level, 0, level * 6);
+	else
+		baseEnemy = new Enemy("RALPH, the dog eater", level, 12 + level * 5, 2 + level, level / 2, level * 6);
+
 	baseEnemy->PrintEnemyStats();
 
 	while (!playerDefeated && !enemyDefeated && !escape)
@@ -89,7 +95,7 @@ void Event::EnemyEncounter(Player& p)
 				break;
 
 			case 1:
-				std::system("cls");
+				//std::system);
 				attackRoll = rand() % 100 + 1;
 				if (attackRoll > 50 - (p.GetStrength() + p.GetDexterity()))
 				{
@@ -128,6 +134,12 @@ void Event::EnemyEncounter(Player& p)
 				std::cout << "Enemy Defeated" << std::endl;
 				std::cout << "Exp: " << baseEnemy->GetExp() << std::endl;
 				p.AddExp(baseEnemy->GetExp());
+			}
+			else if (!p.IsAlive())
+			{
+				playerDefeated = true;
+				std::cout << "Player Defeated" << std::endl;
+				std::cout << "YOU DIED ..." << std::endl;
 			}
 			
 
@@ -191,7 +203,6 @@ void Event::PuzzleEncounter(Player& p)
 	words.push_back("STAR");
 	words.push_back("GALAXY");
 
-	srand(static_cast<unsigned int>(time(0)));
 	const std::string theWord = words[rand() % words.size()];
 
 	std::string wordToGuess(theWord.size(), '_');
@@ -205,12 +216,13 @@ void Event::PuzzleEncounter(Player& p)
 		std::cout << "Word: " << wordToGuess << std::endl;
 		std::cout << "HP: " << p.GetHP() << std::endl;
 
+		std::cout << "\nLetters used: " << used << std::endl;
+
 		std::cout << "Choose your action" << std::endl;
 		std::cout << "0: Skip Puzzle" << std::endl;
 		std::cout << "1: Guess a letter" << std::endl;
 		std::cout << "2: Player Sheet" << std::endl;
 
-		std::cout << "\nLetters used: " << used << std::endl;
 
 		std::cin >> choice;
 		if (std::cin.fail())
