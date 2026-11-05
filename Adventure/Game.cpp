@@ -174,11 +174,11 @@ void Game::NewEnemy()
 	}
 
 	int level = player.GetLevel();
-	int i = rand() % 3;
+	int i = rand() % 3 + 1;
 
-	if (i == 0)
+	if (i == 1)
 		enemy = new Enemy("Arkylian M", level, 10 + level * 4, 3 + level, level / 2, level * 6);
-	else if (i == 1)
+	else if (i == 2)
 		enemy = new Enemy("Zenomorf", level, 8 + level * 3, 6 + level, 0, level * 6);
 	else
 		enemy = new Enemy("RALPH, the dog eater", level, 12 + level * 5, 2 + level, level / 2, level * 6);
@@ -295,6 +295,6 @@ void Game::CheatCode()
 	}
 	else
 	{
-		std::cout << "Wrong code, try tiping: CC" << std::endl;
+		std::cout << "Wrong code, try tiping: CC or heal" << std::endl;
 	}
 }

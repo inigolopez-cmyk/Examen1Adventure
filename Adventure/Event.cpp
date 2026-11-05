@@ -46,6 +46,8 @@ void Event::EnemyEncounter(Player& p)
 	bool playerTurn = false;
 	bool playerDefending = false;
 	int firstTurn = rand() % 100 + 1;
+	int ph = 0;
+
 	if (firstTurn >= 50 - p.GetLuck())
 	{
 		playerTurn = true;
@@ -133,6 +135,21 @@ void Event::EnemyEncounter(Player& p)
 				enemyDefeated = true;
 				std::cout << "Enemy Defeated" << std::endl;
 				std::cout << "Exp: " << baseEnemy->GetExp() << std::endl;
+
+				ph = rand() % 3 + 1;
+				if (ph == 1)
+				{
+					std::cout << "Another alien abomination cleansed from our lands!" << std::endl;
+				}
+				else if (ph == 2)
+				{
+					std::cout << "Xenos bioform eradicated!" << std::endl;
+				}
+				else
+				{
+					std::cout << "Once more, an outlander creature was slaughtered!" << std::endl;
+				}
+
 				p.AddExp(baseEnemy->GetExp());
 			}
 			else if (!p.IsAlive())
